@@ -13693,7 +13693,8 @@ SZIkSZKkSpiYkiRJkiRJUiVMTEmSJEmSJKkSJqYkSZIkSZJUCRNTkiRJkiRJqoSJKUmSJEmSJFXi
 <p><strong>Answer:</strong></p>
 <ul>
 <li>For safety, inputs is the most relevant feature. It gives whether the light is green or red and about the intended travel direction of other vehicles nearby.  </li>
-<li>For efficiency, waypoint may be the most relevant feature, because it gives the cab information about what direction to take next. In addition, the deadline information gives the cab a measure of how much time is remaining until the trial ends, so the deadline information is also relevant feature.</li>
+<li>For efficiency, waypoint may be the most relevant feature, because it gives the cab information about what direction to take next. In addition, the deadline information gives the cab a measure of how much time is remaining until the trial ends, so the deadline information is also relevant feature.  </li>
+<li>The deadline doesn't help for this, because the safety is more important, so even if the cab knows that it cannot arrive on schedule, it shouldn't risk safety to arrive earlier.</li>
 </ul>
 
 </div>
@@ -18272,9 +18273,9 @@ TkSuQmCC
 <p><strong>Answer:</strong></p>
 <ol>
 <li>The decaying function used $\epsilon=\frac{1}{\sqrt{t}}$. I tried some example decay function but I get the best results using this function, so I chose this decay function/  </li>
-<li>It took a little bit over 2000 training trials before the testing trials started.</li>
+<li>It took a little bit over 2500 training trials before the testing trials started.</li>
 <li>The epsilon-tolerance was set to 0.02 to get enough traing trials. The learning factor $\alpha$ was set to 0.7 to accelerate convergence.  </li>
-<li>This improved learning achieves ratings close to A, A most of the times. Average rate of accidents, traffic violation reaches near 0%, and rate of reliabity increased around 90%.</li>
+<li>This improved learning achieves ratings close to A, A most of the times. The total bad actions dropped from 20% to nearly 0, and accident rate dropped from 10% to 0 after 500 trials. The average rewards improved from -2 to 2. </li>
 <li>Agent learned policy that produces safe and reliable behaviour. I would consider this policy to be appropriate. </li>
 <li>I am satisfied with A+ for safety and A for reliability.</li>
 </ol>
@@ -18308,13 +18309,13 @@ TkSuQmCC
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>The state is a tuple with the format (waypoint, light, left, oncoming, right). I show some Q-value examples below:</p>
+<p>The state is a tuple with the format (waypoint, light, left, right, oncoming). I show some Q-value examples below:</p>
 <p>('forward', 'red', 'forward', 'forward', 'left')<br>
  -- forward : -28.25<br>
  -- right : -14.51<br>
  -- None : 2.26<br>
  -- left : -36.63<br>
-Since the waypoint is forward, light is red, and incoming traffic is forward in the way, None is correct.</p>
+Since the waypoint is forward, light is red, and oncoming traffic is left in the way, None is correct.</p>
 <p>('right', 'green', None, None, 'right')<br>
  -- forward : 0.00<br>
  -- right : 2.60<br>
@@ -18326,7 +18327,13 @@ The agent succesfuly learned the optimal policy. When on a green light and inten
  -- right : 0.80<br>
  -- None : -5.10<br>
  -- left : 2.09<br>
-Since the waypoint is right, light is green, and incoming traffic is not in the way, we can go left.</p>
+Since the waypoint is left, light is green, and oncoming traffic is not in the way, we can go left.</p>
+<p>('left', 'red', 'left', 'right', 'right')
+ -- forward : -6.77
+ -- right : 1.03
+ -- None : 0.00
+ -- left : -36.53
+ None is optimal action when light is red, but "right" has the highest Q-value. This is bad action and I think that it will be accident.</p>
 
 </div>
 </div>
@@ -18359,7 +18366,7 @@ Since the waypoint is right, light is green, and incoming traffic is not in the 
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
 <ul>
-<li>Smartcab is not rewarded for making a decision that moves closer destination. The only reward system in place it is a time dependant penalty which does not provide it with any learning about any possible mega delayed rewards. Therefore, the cab is encouraged to take smaller safer rewards that are suboptimal but follow traffic rules.</li>
+<li>Smartcab doesn't know its next state and isn't rewarded for making a decision that moves closer destination. The only reward system in place it is a time dependant penalty which does not provide it with any learning about any possible mega delayed rewards. Therefore, the cab is encouraged to take smaller safer rewards that are suboptimal but follow traffic rules.</li>
 <li>Since the destination may change after every trial run, we cannot guarantee that there will always be the same optimal policy for each future state.</li>
 </ul>
 
